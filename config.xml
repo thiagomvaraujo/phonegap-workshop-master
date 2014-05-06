@@ -24,7 +24,4 @@
     <feature name="http://api.phonegap.com/1.0/notification"/>
 	<param name="android-package" value="org.apache.cordova.core.NetworkManager" />
 	<access origin="*" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 </widget>
