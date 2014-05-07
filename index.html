@@ -3,51 +3,13 @@
 
 <div class='header'><h1>Home</h1></div>
 <div class='search-view'>
-<input id='codigoMesa' type="text"/>
+<input class='search-key' type="text"/>
 <ul class='employee-list'></ul>
 </div>
 
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
+<script src="js/main.js"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
-
-<script>
-$(document).ready(function(){			
-	$.ajax({
-		url: 'http://localhost:2616/Produtos/Listar',
-		type: "GET",
-		dataType: "jsonp",
-		jsonpCallback: "retorno"
-	});
-});
-
-function retorno(data)
-{
-	$.each(data, function(i,item){ 
-			var tweet = item.Nome;
-			$('#cardapio').append('<li id=\'produto_' + item.Id + '\' class=\'produto\' onclick=produtoClick(this)>'+tweet);
-		});
-}
-
-function produtoClick(li){
-	$.ajax({
-		url: 'http://localhost:2616/Pedidos/Solicitar',
-		data: {idUsuario : 1, codigoMesa : $('#codigoMesa').val(), idProduto : li.id.substring(8), quantidade : 1},
-		type: "GET",
-		dataType: "jsonp",
-		jsonpCallback: "solicitacao"
-	})
-}
-
-function solicitacao(data)
-{
-	alert('Solicitação enviada');
-}
-</script>
-
-<body>
-	<ul id="cardapio"></ul>
 </body>
 </html>
