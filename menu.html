@@ -1,0 +1,60 @@
+<html>
+<body>
+
+<div class='header'><h1>Cardápio</h1></div>
+</div>
+
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="js/storage/websql-store.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+
+<script>
+var enderecoServidor = 'http://localhost:2616';
+
+$(document).ready(function(){			
+	$.ajax({
+		url: enderecoServidor + '/Produtos/Listar',
+		type: "GET",
+		dataType: "jsonp",
+		jsonpCallback: "retorno"
+	});
+});
+
+function retorno(data)
+{
+	$.each(data, function(i,item){ 
+			var nome = item.Nome;
+			$('#cardapio').append('<li class=\'produto\' >'+nome + '<input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/> <button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button>');
+			
+		});
+}
+
+function produtoClick(btn){
+	var idProduto = btn.id.substring(8);
+	var qtdProduto = $('#qtd_'+idProduto).val();
+	if(qtdProduto == undefined || qtdProduto == '')
+		alert('Preencha a quantidade que deseja pedir');
+	else
+	{
+		$.ajax({
+			url: enderecoServidor + '/Pedidos/Solicitar',
+			data: {idUsuario : 1, codigoMesa : window.localStorage.getItem("codigoMesa"), idProduto : idProduto, quantidade : qtdProduto},
+			type: "GET",
+			dataType: "jsonp",
+			jsonpCallback: "solicitacao"
+		})
+	}
+}
+
+function solicitacao(data)
+{
+	alert('Solicitação enviada');
+}
+</script>
+
+<body>
+	<ul id="cardapio"></ul>
+</body>
+</html>

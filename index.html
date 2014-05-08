@@ -1,10 +1,10 @@
 <html>
 <body>
 
-<div class='header'><h1>Home</h1></div>
+<div class='header'><h1>Informe sua mesa</h1></div>
 <div class='search-view'>
 <input id='codigoMesa' type="text"/>
-<ul class='employee-list'></ul>
+<button id='btnOk' onclick='gravarMesa()'>OK</button>
 </div>
 
 <script src="lib/jquery-1.8.2.min.js"></script>
@@ -14,36 +14,24 @@
 
 
 <script>
-$(document).ready(function(){			
-	$.ajax({
-		url: 'http://localhost:2616/Produtos/Listar',
-		type: "GET",
-		dataType: "jsonp",
-		jsonpCallback: "retorno"
-	});
-});
-
-function retorno(data)
+$(document).ready(
+	function()
+	{
+		var cdMesa = window.localStorage.getItem("codigoMesa");
+		if(cdMesa != undefined && cdMesa != '')
+			$('#codigoMesa').val(cdMesa);
+	}
+);
+function gravarMesa()
 {
-	$.each(data, function(i,item){ 
-			var tweet = item.Nome;
-			$('#cardapio').append('<li id=\'produto_' + item.Id + '\' class=\'produto\' onclick=produtoClick(this)>'+tweet);
-		});
-}
-
-function produtoClick(li){
-	$.ajax({
-		url: 'http://localhost:2616/Pedidos/Solicitar',
-		data: {idUsuario : 1, codigoMesa : $('#codigoMesa').val(), idProduto : li.id.substring(8), quantidade : 1},
-		type: "GET",
-		dataType: "jsonp",
-		jsonpCallback: "solicitacao"
-	})
-}
-
-function solicitacao(data)
-{
-	alert('Solicitação enviada');
+	var cdMesa = $('#codigoMesa').val();
+	if(cdMesa == undefined || cdMesa == '')
+		alert("Preencha o código da mesa antes de prosseguir");
+	else
+	{
+		window.localStorage.setItem("codigoMesa", cdMesa);
+		window.location = "menu.html"
+	}
 }
 </script>
 
