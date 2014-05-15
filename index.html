@@ -1,36 +1,52 @@
 <html>
 <body>
 
-<div class='header'><h1>Informe sua mesa</h1></div>
-<div class='search-view'>
-<input id='codigoMesa' type="text"/>
-<button id='btnOk' onclick='gravarMesa()'>OK</button>
+<div class='header'><h3>Login</h3></div>
+<input id='login' type="text"/>
+<div class='header'><h3>Senha</h3></div>
+<input id='senha' type="text"/>
+<button id='btnOk' onclick='login()'>OK</button>
 </div>
 
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
+<script src="js/main.js"></script>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
 
 <script>
-$(document).ready(
-	function()
-	{
-		var cdMesa = window.localStorage.getItem("codigoMesa");
-		if(cdMesa != undefined && cdMesa != '')
-			$('#codigoMesa').val(cdMesa);
-	}
-);
-function gravarMesa()
+function login()
 {
-	var cdMesa = $('#codigoMesa').val();
-	if(cdMesa == undefined || cdMesa == '')
-		alert("Preencha o código da mesa antes de prosseguir");
+	var login = $('#login').val();
+	var senha = $('#senha').val();
+	if(login == undefined || login == '' || senha == undefined || senha == '')
+		alert("Preencha o login e senha antes de prosseguir");
 	else
 	{
-		window.localStorage.setItem("codigoMesa", cdMesa);
-		window.location = "menu.html"
+		$.ajax({
+			url: enderecoServidor + '/Usuario/Login',
+			data: {login : login, senha : senha},
+			type: "GET",
+			dataType: "jsonp",
+			jsonpCallback: "retornoLogin"
+		})
+	}
+}
+
+function retornoLogin(data)
+{
+	if(data != undefined && (data.Sucesso || data.Sucesso == 'True'))
+	{
+		window.localStorage.setItem("codigoUsuario", data.codigoUsuario);
+		window.location = "mesa.html"
+	}
+	else
+	{
+		if(data != undefined && data.mensagem != undefined && data.mensagem != '')
+			alert(data.mensagem);
+		else
+			alert('Não foi possível efetuar o login');
 	}
 }
 </script>

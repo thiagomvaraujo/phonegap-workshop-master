@@ -1,0 +1,41 @@
+<html>
+<body>
+
+<div class='header'><h1>Informe sua mesa</h1></div>
+<div class='search-view'>
+<input id='codigoMesa' type="text"/>
+<button id='btnOk' onclick='gravarMesa()'>OK</button>
+</div>
+
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="js/storage/websql-store.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+
+<script>
+$(document).ready(
+	function()
+	{
+		var cdMesa = window.localStorage.getItem("codigoMesa");
+		if(cdMesa != undefined && cdMesa != '')
+			$('#codigoMesa').val(cdMesa);
+	}
+);
+function gravarMesa()
+{
+	var cdMesa = $('#codigoMesa').val();
+	if(cdMesa == undefined || cdMesa == '')
+		alert("Preencha o código da mesa antes de prosseguir");
+	else
+	{
+		window.localStorage.setItem("codigoMesa", cdMesa);
+		window.location = "menu.html"
+	}
+}
+</script>
+
+<body>
+	<ul id="cardapio"></ul>
+</body>
+</html>

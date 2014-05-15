@@ -6,12 +6,12 @@
 
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
-
+<script src="js/main.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
 
 <script>
-var enderecoServidor = 'http://localhost:2616';
+
 
 $(document).ready(function(){			
 	$.ajax({
@@ -26,7 +26,8 @@ function retorno(data)
 {
 	$.each(data, function(i,item){ 
 			var nome = item.Nome;
-			$('#cardapio').append('<li class=\'produto\' >'+nome + '<input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/> <button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button>');
+			var valor = ' (R$ ' + item.Valor + ') ';
+			$('#cardapio').append('<li class=\'produto\' >'+nome + valor +'<input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/> <button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button>');
 			
 		});
 }
@@ -58,3 +59,4 @@ function solicitacao(data)
 	<ul id="cardapio"></ul>
 </body>
 </html>
+
