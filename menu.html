@@ -1,11 +1,5 @@
 <html>
-<body>
-<div style="padding:5px">
-    <label>Buscar</label>
-    <input id="pesquisar" />
-</div>
-
-<script src="js/storage/websql-store.js"></script>
+    <script src="js/storage/websql-store.js"></script>
 <script src="js/main.js"></script>
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="Scripts/bootstrap.min.js"></script>
@@ -15,65 +9,69 @@
 <script>
 
 
-$(document).ready(function(){			
-	$.ajax({
-		url: enderecoServidor + '/Produtos/Listar',
-		type: "GET",
-		dataType: "jsonp",
-		jsonpCallback: "retorno"
-	});
+    $(document).ready(function () {
+        $.ajax({
+            url: enderecoServidor + '/Produtos/Listar',
+            type: "GET",
+            dataType: "jsonp",
+            jsonpCallback: "retorno"
+        });
 
-	$('#pesquisar').keyup(function () {
-	    var data = this.value.trim();
-	    var jo = $("#cardapio").find("tr");
-	    if (this.value == "") {
-	        jo.show();
-	        return;
-	    }
-	    jo.hide();
-	    jo.filter(function (i, v) {
-	        var $t = $(this);
-	        if ($t.text().toUpperCase().indexOf(data.toUpperCase()) != -1)
-	            return true;
-	        return false;
-	    }).show();
-	});
-});
+        $('#pesquisar').keyup(function () {
+            var data = this.value.trim();
+            var jo = $("#cardapio").find("tr");
+            if (this.value == "") {
+                jo.show();
+                return;
+            }
+            jo.hide();
+            jo.filter(function (i, v) {
+                var $t = $(this);
+                if ($t.text().toUpperCase().indexOf(data.toUpperCase()) != -1)
+                    return true;
+                return false;
+            }).show();
+        });
+    });
 
 
 
-function retorno(data)
-{
-	$.each(data, function(i,item){ 
-			var nome = item.Nome;
-			var valor = 'R$ ' + item.Valor;
-			$('#cardapio').append('<tr><td class=\'produto\' >' + nome + '</td><td>' + valor + '</td><td><input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/></td><td><button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button></td></tr>');
-			
-		});
-}
+    function retorno(data) {
+        $.each(data, function (i, item) {
+            var nome = item.Nome;
+            var valor = 'R$ ' + item.Valor;
+            $('#cardapio').append('<tr><td class=\'produto\' >' + nome + '</td><td>' + valor + '</td><td><input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/></td><td><button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button></td></tr>');
 
-function produtoClick(btn){
-	var idProduto = btn.id.substring(8);
-	var qtdProduto = $('#qtd_'+idProduto).val();
-	if(qtdProduto == undefined || qtdProduto == '')
-		alert('Preencha a quantidade que deseja pedir');
-	else
-	{
-		$.ajax({
-			url: enderecoServidor + '/Pedidos/Solicitar',
-			data: {idUsuario : window.localStorage.getItem("codigoUsuario"), codigoMesa : window.localStorage.getItem("codigoMesa"), idProduto : idProduto, quantidade : qtdProduto},
-			type: "GET",
-			dataType: "jsonp",
-			jsonpCallback: "solicitacao"
-		})
-	}
-}
+        });
+    }
 
-function solicitacao(data)
-{
-	alert('Solicitação enviada');
-}
+    function produtoClick(btn) {
+        var idProduto = btn.id.substring(8);
+        var qtdProduto = $('#qtd_' + idProduto).val();
+        if (qtdProduto == undefined || qtdProduto == '')
+            alert('Preencha a quantidade que deseja pedir');
+        else {
+            $.ajax({
+                url: enderecoServidor + '/Pedidos/Solicitar',
+                data: { idUsuario: window.localStorage.getItem("codigoUsuario"), codigoMesa: window.localStorage.getItem("codigoMesa"), idProduto: idProduto, quantidade: qtdProduto },
+                type: "GET",
+                dataType: "jsonp",
+                jsonpCallback: "solicitacao"
+            })
+        }
+    }
+
+    function solicitacao(data) {
+        alert('Solicitação enviada');
+    }
 </script>
+<body>
+<div style="padding:5px">
+    <label>Buscar</label>
+    <input id="pesquisar" />
+</div>
+
+
 
 
 <table class="table">
