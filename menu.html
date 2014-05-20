@@ -1,14 +1,16 @@
 <html>
 <body>
-
-<div class='header'><h1>Cardápio</h1></div>
+<div style="padding:5px">
+    <label>Buscar</label>
+    <input id="pesquisar" />
 </div>
 
-<script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
 <script src="js/main.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 
 <script>
 
@@ -20,14 +22,32 @@ $(document).ready(function(){
 		dataType: "jsonp",
 		jsonpCallback: "retorno"
 	});
+
+	$('#pesquisar').keyup(function () {
+	    var data = this.value.trim();
+	    var jo = $("#cardapio").find("tr");
+	    if (this.value == "") {
+	        jo.show();
+	        return;
+	    }
+	    jo.hide();
+	    jo.filter(function (i, v) {
+	        var $t = $(this);
+	        if ($t.text().toUpperCase().indexOf(data.toUpperCase()) != -1)
+	            return true;
+	        return false;
+	    }).show();
+	});
 });
+
+
 
 function retorno(data)
 {
 	$.each(data, function(i,item){ 
 			var nome = item.Nome;
-			var valor = ' (R$ ' + item.Valor + ') ';
-			$('#cardapio').append('<li class=\'produto\' >'+nome + valor +'<input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/> <button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button>');
+			var valor = 'R$ ' + item.Valor;
+			$('#cardapio').append('<tr><td class=\'produto\' >' + nome + '</td><td>' + valor + '</td><td><input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/></td><td><button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button></td></tr>');
 			
 		});
 }
@@ -41,7 +61,7 @@ function produtoClick(btn){
 	{
 		$.ajax({
 			url: enderecoServidor + '/Pedidos/Solicitar',
-			data: {idUsuario : 1, codigoMesa : window.localStorage.getItem("codigoMesa"), idProduto : idProduto, quantidade : qtdProduto},
+			data: {idUsuario : window.localStorage.getItem("codigoUsuario"), codigoMesa : window.localStorage.getItem("codigoMesa"), idProduto : idProduto, quantidade : qtdProduto},
 			type: "GET",
 			dataType: "jsonp",
 			jsonpCallback: "solicitacao"
@@ -55,8 +75,19 @@ function solicitacao(data)
 }
 </script>
 
-<body>
-	<ul id="cardapio"></ul>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Descrição</th>
+			<th>Valor</th>
+			<th>Qtd</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody id="cardapio">
+	</tbody>
+</table>
 </body>
 </html>
 
