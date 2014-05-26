@@ -11,6 +11,8 @@ body {
     background-color: #fff;
     overflow: hidden;
     position: relative;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .header {
@@ -188,3 +190,4 @@ h2 {
     width:100px;
     height:100px;
 }
+

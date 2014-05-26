@@ -1,29 +1,68 @@
 <html>
 <body>
-
-<div class='header'><h3>Login</h3></div>
-<input id='login' type="text"/>
-<div class='header'><h3>Senha</h3></div>
-<input id='senha' type="text"/>
-<button id='btnOk' onclick='login()'>OK</button>
-</div>
-
+<style>
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin-heading {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;  
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
 <script src="js/main.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
+<div class="container">
+	<div class='form-signin'>
+		<h2 class="form-signin-heading">Wayter</h2>
+		<input id='login' placeholder='Login' class="form-control" type="text"/>
+		<input id='senha' placeholder='Senha' class="form-control" type="password"/>
+		<button class="btn btn-lg btn-primary btn-block" id='btnOk' onclick='login()'>Entrar</button>
+	</div>
+</div>
 
 <script>
+$(document).ready(
+	function()
+	{
+		var cdUsuario = window.localStorage.getItem("loginUsuario");
+		if(cdUsuario != undefined && cdUsuario != '')
+			$('#login').val(cdUsuario);
+	}
+);
+
 function login()
 {
 	var login = $('#login').val();
 	var senha = $('#senha').val();
 	if(login == undefined || login == '' || senha == undefined || senha == '')
-		alert("Preencha o login e senha antes de prosseguir");
+	{
+		envioErro("Preencha o login e senha antes de prosseguir");
+	}
 	else
 	{
+		window.localStorage.setItem("loginUsuario", login);
 		$.ajax({
 			url: enderecoServidor + '/Usuario/Login',
 			data: {login : login, senha : senha},
@@ -44,14 +83,27 @@ function retornoLogin(data)
 	else
 	{
 		if(data != undefined && data.mensagem != undefined && data.mensagem != '')
-			alert(data.mensagem);
+			envioErro(data.mensagem);
 		else
-			alert('Não foi possível efetuar o login');
+			envioErro("Não foi possível efetuar o login");
 	}
+}
+
+function envioErro(mensagem) {
+	$('#mensagemErro').html(mensagem);
+	$('#idEnvioErro').modal('toggle');
 }
 </script>
 
 <body>
+	<div id="idEnvioErro" class="modal fade">
+	  <div class="modal-dialog">
+			<div class="alert alert-warning" data-dismiss="modal">
+				<h4 id='mensagemErro'></h4>
+			</div>        
+	  </div>
+	</div>
+
 	<ul id="cardapio"></ul>
 </body>
 </html>

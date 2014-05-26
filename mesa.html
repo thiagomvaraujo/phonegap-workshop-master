@@ -1,17 +1,42 @@
 <html>
 <body>
-
-<div class='header'><h1>Informe sua mesa</h1></div>
-<div class='search-view'>
-<input id='codigoMesa' type="text"/>
-<button id='btnOk' onclick='gravarMesa()'>OK</button>
-</div>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="lib/jquery-1.8.2.min.js"></script>
 <script src="js/storage/websql-store.js"></script>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
+<script src="Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+<style>
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.main {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.heading {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.control {
+	position: relative;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+	width: 250px;
+	padding: 8px;
+	font-size: 16px;
+}
+.button {
+	position: relative;
+	width: 300px;
+	padding: 6px;
+	font-size: 16px;
+	margin-top:5px;
+}
+</style>
 
 <script>
 $(document).ready(
@@ -26,16 +51,42 @@ function gravarMesa()
 {
 	var cdMesa = $('#codigoMesa').val();
 	if(cdMesa == undefined || cdMesa == '')
-		alert("Preencha o código da mesa antes de prosseguir");
+		envioErro("Preencha o código da mesa antes de prosseguir");
 	else
 	{
 		window.localStorage.setItem("codigoMesa", cdMesa);
 		window.location = "menu.html"
 	}
 }
+
+function envioErro(mensagem) {
+	$('#mensagemErro').html(mensagem);
+	$('#idEnvioErro').modal('toggle');
+}
+
 </script>
 
 <body>
+	<div class="container">
+		<div class='main'>
+			<h2 class="heading">Informe sua mesa</h2>
+			<div class='search-view'>
+			<div class="input-group">
+			  <input type="text" id='codigoMesa' class="control">
+			  <span class="input-group-addon control" onclick='envioErro("Aguarde próxima versão.");'><img src='img/QRCode.jpg'/></span>
+			</div>
+			<button id='btnOk' class='btn btn-success button' onclick='gravarMesa()'>OK</button>
+			</div>
+		</div>
+	</div>
+	<div id="idEnvioErro" class="modal fade">
+	  <div class="modal-dialog">
+			<div class="alert alert-warning" data-dismiss="modal">
+				<h4 id='mensagemErro'></h4>
+			</div>        
+	  </div>
+	</div>
+
 	<ul id="cardapio"></ul>
 </body>
 </html>

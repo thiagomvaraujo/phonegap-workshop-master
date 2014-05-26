@@ -1,0 +1,73 @@
+<html>
+    <script src="js/storage/websql-store.js"></script>
+<script src="js/main.js"></script>
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+
+<script>
+$(document).ready(
+	function()
+	{
+		var cdMesa = window.localStorage.getItem("codigoMesa");
+		if(cdMesa != undefined && cdMesa != '')
+			$('#codigoMesa').html("Mesa: " + cdMesa);
+	}
+);
+</script>
+<body style='overflow:hidden'>
+	<nav class="navbar navbar-default navbar-fixed-top role="navigation">
+		<table style='width:100%;margin:2px;'><tr>
+		<td><h4 id="codigoMesa"></h4></td>
+		<td style='width:5px'></td>
+		<td style='width:80px'><button type="button" class="btn btn-default btn-info navbar-btn"><span class="glyphicon glyphicon-pencil"></span> Conta</button></td>
+		<td style='width:5px'></td>
+		<td style='width:80px'><button type="button" class="btn btn-default btn-info navbar-btn"><span class="glyphicon glyphicon-log-out"></span> Sair</button></td>
+		</tr></table>
+	</nav>
+	<div style="height:50px;" id="spacer"></div>
+
+	<div class="container row">
+		<table class="table table-striped">
+			<tbody id="cardapio">
+				<tr>
+					<td>Costelinha Embriagada</td>
+					<td><h5 style='white-space: nowrap;'">R$ 25,00</h5></td>
+					<td>eu</td>
+					<td><div class="has-warning"><span class="glyphicon glyphicon-time form-control-feedback"></span></div></td>
+				</tr>
+				<tr>
+					<td>Linguiça caramelizada servida com cebola</td>
+					<td><h5 style='white-space: nowrap;'">R$ 20,00</h5></td>
+					<td>Thiago</td>
+					<td><div class="has-success"><span class="glyphicon glyphicon-ok form-control-feedback"></span></div></td>
+				</tr>
+				<tr>
+					<td>Linguiça caramelizada servida com cebola</td>
+					<td><h5 style='white-space: nowrap;'">R$ 20,00</h5></td>
+					<td>eu</td>
+					<td><div class="has-success"><span class="glyphicon glyphicon-ok form-control-feedback"></span></div></td>
+				</tr>
+				<tr>
+					<td>Cerveja Original</td>
+					<td><h5 style='white-space: nowrap;'">R$ 3,50</h5></td>
+					<td>eu</td>
+					<td><div class="has-error"><span class="glyphicon glyphicon-remove form-control-feedback"></span></div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div style="height:35px;" id="spacer"></div>
+	<nav class="navbar navbar-default navbar-fixed-bottom role="navigation">
+		<ul class="nav nav-pills text-center">
+			<li style="width:33%"><a href="#"  onclick="window.location = 'menu.html'">Novo <BR> Pedido</a></li>
+			<li style="width:33%"><a href="#" onclick="window.location = 'meumenu.html'">Meus <BR> Pedidos</a></li>
+			<li class="active" style="width:33%"><a href="#">Minha <BR> Mesa</a></li>
+		</ul>
+	</nav>
+
+		</body>
+</html>
+

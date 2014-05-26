@@ -1,14 +1,19 @@
 <html>
     <script src="js/storage/websql-store.js"></script>
-<script src="js/main.js"></script>
-<script src="lib/jquery-1.8.2.min.js"></script>
-<script src="Scripts/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-
+	<script type="text/javascript" src="PushNotification.js"></script>
+	<script src="js/main.js"></script>
+	<script src="lib/jquery-1.8.2.min.js"></script>
+	<script src="Scripts/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript">
+		app.initialize();
+	</script>
 <script>
-
-
+	var idProduto;
+	
     $(document).ready(function () {
         $.ajax({
             url: enderecoServidor + '/Produtos/Listar',
@@ -32,6 +37,9 @@
                 return false;
             }).show();
         });
+		
+		
+	
     });
 
 
@@ -39,17 +47,38 @@
     function retorno(data) {
         $.each(data, function (i, item) {
             var nome = item.Nome;
-            var valor = 'R$ ' + item.Valor;
-            $('#cardapio').append('<tr><td class=\'produto\' >' + nome + '</td><td>' + valor + '</td><td><input value=\'1\' style=\'width: 30px\' id=\'qtd_' + item.Id + '\'/></td><td><button id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button></td></tr>');
+            var valor = 'R$ ' + item.Valor.toFixed(2);
+            $('#cardapio').append('<tr><td class=\'produto\' id=\'descricao_' + item.Id + '\'>' + nome + '</td><td id=\'valor_' + item.Id + '\'><h5 style=\'white-space: nowrap;\'">' + valor + '</h5></td><td><button class=\'btn btn-sm btn-success\' id=\'produto_' + item.Id + '\' onclick=produtoClick(this) > Pedir </button></td></tr>');
 
         });
     }
+	
+	function garcomClick() {
+		$('#mensagemGarcom').val('');
+		$('#idConfirmacaoGarcom').modal('toggle');
+	}
 
     function produtoClick(btn) {
-        var idProduto = btn.id.substring(8);
-        var qtdProduto = $('#qtd_' + idProduto).val();
+        idProduto = btn.id.substring(8);
+		$('#btnConfirmar').removeAttr("disabled");
+		$('#idDescricaoItem').html($('#descricao_' + idProduto).html());
+		$('#idValorItem').html($('#valor_' + idProduto).html());
+		$('#qtdItem').val(1);
+		$('#idConfirmacao').modal('toggle');
+    }
+	
+	function aoConfirmarGarcom() {
+		envioSucesso('Chamado para garçom enviado.');
+		$('#idConfirmacaoGarcom').modal('toggle');
+	}
+	
+	function aoConfirmar() {
+		var qtdProduto = $('#qtdItem').val();
+		$('#btnConfirmar').attr("disabled", "disabled");
         if (qtdProduto == undefined || qtdProduto == '')
-            alert('Preencha a quantidade que deseja pedir');
+		{
+			alert('Preencha a quantidade que deseja pedir');
+		}
         else {
             $.ajax({
                 url: enderecoServidor + '/Pedidos/Solicitar',
@@ -59,33 +88,113 @@
                 jsonpCallback: "solicitacao"
             })
         }
-    }
+	}
 
     function solicitacao(data) {
-        alert('Solicitação enviada');
+		$('#idConfirmacao').modal('toggle');
+		envioSucesso('Solicitação enviada.');
     }
+	
+	function envioSucesso(mensagem) {
+		$('#mensagemSucesso').html(mensagem);
+		$('#idEnvioSucesso').modal('toggle');
+	}
+	
 </script>
-<body>
-<div style="padding:5px">
-    <label>Buscar</label>
-    <input id="pesquisar" />
-</div>
+<body style='overflow:hidden'>
+	<div id="idEnvioSucesso" class="modal fade">
+	  <div class="modal-dialog">
+			<div class="alert alert-success" data-dismiss="modal">
+				<h4 id='mensagemSucesso'></h4>
+			</div>        
+	  </div>
+	</div>
+
+	<nav class="navbar navbar-default navbar-fixed-top role="navigation">
+		<table style='width:100%;margin:2px;'><tr>
+		<td><input class='form-control' id="pesquisar" placeholder='Pesquisar produto'/></td>
+		<td style='width:5px'></td>
+		<td style='width:80px'><button type="button" class="btn btn-default btn-info navbar-btn" onclick='garcomClick();'><span class="glyphicon glyphicon-hand-up"></span> Garçom</button></td>
+		<td style='width:5px'></td>
+		<td style='width:80px'><button type="button" class="btn btn-default btn-info navbar-btn"><span class="glyphicon glyphicon-log-out"></span> Sair</button></td>
+		</tr></table>
+	</nav>
+	<div style="height:50px;" id="spacer"></div>
+	<div class="container row">
+		<table class="table table-striped">
+			<tbody id="cardapio">
+			</tbody>
+		</table>
+	</div>
+    <div style="height:35px;" id="spacer"></div>
+	<nav class="navbar navbar-default navbar-fixed-bottom role="navigation">
+		<ul class="nav nav-pills text-center">
+			<li class="active" style="width:33%"><a href="#">Novo <BR> Pedido</a></li>
+			<li style="width:33%"><a href="#" onclick="window.location = 'meumenu.html#'">Meus <BR> Pedidos</a></li>
+			<li style="width:33%"><a href="#" onclick="window.location = 'minhamesa.html#'">Minha <BR> Mesa</a></li>
+		</ul>
+	</nav>
+	
+		<div id="idConfirmacaoGarcom" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title" id="idTituloModalGarcom" style="text-align: center">Chamar Garçom</h4>
+				</div>
+				<div class="modal-body" id="idConteudoModalGarcom" style="max-height: 380px; overflow: auto">
+					<textarea class='form-control' id='mensagemGarcom' placeholder='Insira um texto para comunicar com o garçom ou deixe vazio.'></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Fechar</button>
+					<button type="button" id="btnConfirmarGarcom" class="btn btn-lg btn-success btnConfirmar" onclick="aoConfirmarGarcom()" value="Confirmar">
+						<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Confirmar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-
-
-<table class="table">
-	<thead>
-		<tr>
-			<th>Descrição</th>
-			<th>Valor</th>
-			<th>Qtd</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody id="cardapio">
-	</tbody>
-</table>
-</body>
+	<div id="idConfirmacao" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title" id="idTituloModalPedidos" style="text-align: center">Confirme seu Pedido</h4>
+				</div>
+				<div class="modal-body" id="idConteudoModal" style="max-height: 380px; overflow: auto">
+					<div style='font-size:20px;margin-bottom:20px' id='idDescricaoItem'></div>
+					<table width='100%'>
+						<tr>
+							<td width='50px'>Valor:</td>
+							<td id='idValorItem'></td>
+							<td width='100px'>Quantidade:</td>
+							<td>
+								<select value='1' style='width: 50px' id='qtdItem'>
+									<option value='1'>1</option>
+									<option value='2'>2</option>
+									<option value='3'>3</option>
+									<option value='4'>4</option>
+									<option value='5'>5</option>
+									<option value='6'>6</option>
+									<option value='7'>7</option>
+									<option value='8'>8</option>
+									<option value='9'>9</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Fechar</button>
+					<button type="button" id="btnConfirmar" class="btn btn-lg btn-success btnConfirmar" onclick="aoConfirmar()" value="Confirmar">
+						<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Confirmar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		</body>
 </html>
 

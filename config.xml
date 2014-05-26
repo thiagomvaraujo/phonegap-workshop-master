@@ -14,6 +14,7 @@
     <author href="http://www.dtisistemas.com.br" email="thiago.araujo@dtisistemas.com.br">
         DTI Sistemas
     </author>
- 
+	
+	<gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" />
     <feature name="http://api.phonegap.com/1.0/network"/>
 </widget>
