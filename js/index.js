@@ -19,7 +19,6 @@
 var app = {
     // Application Constructor
     initialize: function () {
-		alert('initialize');
         this.bindEvents();
     },
     // Bind Event Listeners
@@ -28,6 +27,10 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+		alert('teste1');
+        var pushNotification = window.plugins.pushNotification;
+        pushNotification.register(successHandler, errorHandler, { "senderID": "424862620014", "ecb": "onNotificationGCM" });
+		alert('teste2');
     },
     // deviceready Event Handler
     //
@@ -46,10 +49,6 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-		alert('teste1:'+id);
-        var pushNotification = window.plugins.pushNotification;
-        pushNotification.register(successHandler, errorHandler, { "senderID": "424862620014", "ecb": "onNotificationGCM" });
-		alert('teste');
     }
 };
 
