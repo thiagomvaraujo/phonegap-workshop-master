@@ -1,6 +1,5 @@
 <html>
     <script src="js/storage/websql-store.js"></script>
-	<script type="text/javascript" src="PushNotification.js"></script>
 	<script src="js/main.js"></script>
 	<script src="lib/jquery-1.8.2.min.js"></script>
 	<script src="Scripts/bootstrap.min.js"></script>
@@ -37,10 +36,40 @@
                 return false;
             }).show();
         });
-		
-		
-	
     });
+
+    // result contains any message sent from the plugin call
+    function successHandler(result) {
+        alert('Callback Success! Result = ' + result)
+    }
+
+    function errorHandler(error) {
+        alert(error);
+    }
+
+    function onNotificationGCM(e) {
+        switch (e.event) {
+            case 'registered':
+                if (e.regid.length > 0) {
+                    console.log("Regid " + e.regid);
+                    alert('registration id = ' + e.regid);
+                }
+                break;
+
+            case 'message':
+                // this is the actual push notification. its format depends on the data model from the push server
+                alert('message = ' + e.message + ' msgcnt = ' + e.msgcnt);
+                break;
+
+            case 'error':
+                alert('GCM error = ' + e.msg);
+                break;
+
+            default:
+                alert('An unknown GCM event has occurred');
+                break;
+        }
+    }
 
 
 
